@@ -1,0 +1,65 @@
+#include "frmupdate.h"
+#include "ui_frmupdate.h"
+#include <mainwindow.h>
+#include <qsqlquery.h>
+#include <qmessagebox.h>
+
+frmUpdate::frmUpdate(QString  &cell1,QString & cell2,QString  &cell3,int &index,QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::frmUpdate)
+{
+    ui->setupUi(this);
+
+
+
+
+    ui->lineEdit->setText(cell1);
+    ui->lineEdit_2->setText(cell3);
+    ui->textEdit->setText(cell2);
+
+    QString st;
+    st.setNum(index);
+    ui->label_3->setText(st);
+    ind = index;
+}
+
+frmUpdate::~frmUpdate()
+{
+    delete ui;
+}
+
+void frmUpdate::on_btnUpdate_clicked()
+{
+
+    QString Title,Group,Poem;
+
+    Title = "1";
+    Group = "2";
+    Poem = "3";
+
+
+    MainWindow mainwindow;
+    //mainwindow.connOpen();
+
+
+
+    QSqlQuery * qry1 = new QSqlQuery(mainwindow.mydb);
+
+    qry1->prepare("update Poems set Title='"+Title+"',Poem='"+Poem+"',Grp='"+Group+"' where ID='"+ind+"' ");
+
+
+    if(qry1->exec())
+    {
+        QMessageBox::information(this,tr("ویرایش شعر "),tr("شعر ویرایش شد"));
+    }
+    else
+    {
+        QMessageBox::critical(this,tr("ویرایش شعر"),"error");
+    }
+
+}
+
+void frmUpdate::on_pushButton_2_clicked()
+{
+    this->close();
+}
